@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.BadgeMapper">
+
+
+	<select id="findBadgeByUser_id" parameterType="java.lang.String"
+		resultType="Badge">
+
+		Select * from badge where user_id=#{user_id} order by
+		create_time    desc
+	</select>
+
+
+
+
+	<insert id="insertBadge" parameterType="Badge">
+		insert into
+		badge(name,content,create_time,user_id)
+		values(#{name},#{content},#{create_time},#{user_id})
+	</insert>
+
+
+</mapper>

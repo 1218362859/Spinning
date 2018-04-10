@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.OriginalMapper">
+
+
+	<select id="findOriginalByUser_id" parameterType="java.lang.String"
+		resultType="Original">
+
+		Select * from original where uid=#{uid} order by
+		create_time    desc
+	</select>
+
+
+
+
+	<insert id="insertOriginal" parameterType="Original">
+		insert into
+		original(uid,bluetooth_data,create_time)
+		values(#{uid},#{bluetooth_data},#{create_time})
+	</insert>
+
+
+
+	<select id="findOriginalList" parameterType="com.femtoapp.pojo.OriginalQueryVo"
+		resultType="com.femtoapp.pojo.OriginalCustom">
+		select original.* ,user.uid,user.nickname,user.photourl
+		,user.sex ,user.weight ,user.level ,user.regist_time ,user.purview
+		,user.height ,user.birthday from original,user where
+		original.uid=user.uid
+			<include refid="query_where"></include>
+
+		order by original.create_time desc
+
+	</select>
+	<delete id="deleteOriginal" parameterType="java.lang.Integer">
+	
+	delete  from original where id=#{id}
+	</delete>
+	
+
+
+<sql id="query_where">
+		<if test="originalCustom!=null">
+			<if test="originalCustom.nickname!=null and originalCustom.nickname!=''">
+			
+		   and	user.nickname like '%${originalCustom.nickname}%'
+			</if>
+		</if>
+	</sql>
+
+</mapper>

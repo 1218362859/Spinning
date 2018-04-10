@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.ZansMapper">
+
+
+	<select id="findZanByUser_id" 		resultType="com.femtoapp.pojo.Zans">
+
+		Select * from zans where user_id=#{user_id} and aid=#{aid}
+		
+	</select>
+
+
+
+
+	<insert id="insertZans">
+		insert into
+		zans(user_id,aid,create_time)
+		values(#{user_id},#{aid},#{create_time})
+	</insert>
+<insert id="deleteZans" >
+	delete  from zans where user_id=#{user_id} and aid=#{aid}
+	</insert>
+
+</mapper>

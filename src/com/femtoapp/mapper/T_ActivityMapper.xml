@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.T_ActivityMapper">
+	<select id="findT_ActivityByid" parameterType="java.lang.Integer"
+		resultType="T_Activity">
+
+		Select * from t_activity where aid=#{aid} order by
+		t_activity.create_time desc
+	</select>
+
+
+
+
+	<delete id="deleteT_Activity" parameterType="java.lang.Integer">
+
+		delete from
+		t_activity where aid=#{aid}
+	</delete>
+
+
+	<insert id="insertT_Activity" parameterType="T_Activity">
+		insert into
+		t_activity(type,title,time,content,state,user_id,clicks_count,zan_count,create_time)
+		values(#{type},#{title},#{time},#{content},#{state},#{user_id},#{clicks_count},#{zan_count},#{create_time})
+	</insert>
+	<!-- parameterType建议传入包装对象 resultType建议用扩展对象 -->
+	<select id="findT_ActivityList" parameterType="com.femtoapp.pojo.T_ActivityQueryVo"
+		resultType="com.femtoapp.pojo.T_ActivityCustom">
+		select t_activity.* from t_activity
+		<where>
+			<include refid="query_activity_where"></include>
+
+		</where>
+
+		order by t_activity.create_time
+		desc
+	</select>
+	<update id="updateT_Activity" parameterType="T_Activity">
+		update t_activity
+		set
+		type=#{type},title=#{title},time=#{time},content=#{content},state=#{state},user_id=#{user_id},clicks_count=#{clicks_count},zan_count=#{zan_count},create_time=#{create_time}
+		where aid=#{aid}
+
+	</update>
+	
+	<update id="updateT_ActivityZans" >
+		update t_activity
+		set
+		zan_count=zan_count  +  #{zan_count}
+		where aid=#{aid}
+
+	</update>
+		<update id="updateT_ActivityClicks_count" >
+		update t_activity
+		set
+		clicks_count=clicks_count  +   #{clicks_count}
+		where aid=#{aid}
+
+	</update>
+	
+	<sql id="query_activity_where">
+		<if test="t_ActivityCustom!=null">
+			<if test="t_ActivityCustom.type!=null and t_ActivityCustom.type!=''">
+				and t_Activity.type like '%${t_ActivityCustom.type}%'
+			</if>
+
+			<if test="t_ActivityCustom.title!=null and t_ActivityCustom.title!=''">
+				and t_Activity.title like '%${t_ActivityCustom.title}%'
+			</if>
+			<if test="t_ActivityCustom.state!=null and t_ActivityCustom.state!=''">
+			and 	t_Activity.state like '%${t_ActivityCustom.state}%'
+			</if>
+			<if test="t_ActivityCustom.user_id!=null and t_ActivityCustom.user_id!=''">
+			and	t_Activity.user_id = #{t_ActivityCustom.user_id}
+			</if>
+		</if>
+	</sql>
+
+</mapper>

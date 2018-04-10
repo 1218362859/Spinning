@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.CollectMapper">
+	<select id="findCollectByid" parameterType="java.lang.Integer"
+		resultType="Collect">
+
+		Select * from collect where id=#{id}
+	</select>
+
+
+	<delete id="deleteCollect" parameterType="java.lang.Integer">
+
+		delete from collect
+		where id=#{id}
+	</delete>
+
+
+	<insert id="insertCollect" parameterType="Collect">
+		insert into
+		collect(aid,create_time,user_id)
+		values(#{aid},#{create_time},#{user_id})
+	</insert>
+	<!-- parameterType建议传入包装对象 resultType建议用扩展对象 -->
+	<select id="findCollectList" parameterType="com.femtoapp.pojo.CollectQueryVo"
+		resultType="com.femtoapp.pojo.CollectCustom">
+		select collect.* from collect
+		where
+		collect.user_id  =  #{collectCustom.user_id}    order by create_time desc
+	</select>
+	<update id="updateCollect" parameterType="Collect">
+		update collect set
+		aid=#{aid},create_time=#{create_time},user_id=#{user_id}
+		where id=#{id}
+
+	</update>
+
+
+</mapper>

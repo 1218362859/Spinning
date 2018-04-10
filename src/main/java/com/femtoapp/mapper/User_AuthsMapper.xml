@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.User_AuthsMapper">
+	<select id="findUser_AuthsByid" parameterType="java.lang.Integer"
+		resultType="User_Auths">
+
+		Select * from user_auths where id=#{id}
+	</select>
+
+	<select id="findUser_AuthsByIdentifier" parameterType="String"
+		resultType="User_Auths">
+
+		Select * from user_auths where identifier=#{identifier}
+	</select>
+
+	<select id="findUser_AuthsByPhonenum" parameterType="String"
+		resultType="User_Auths">
+
+		Select * from user_auths where phonenum=#{phonenum}
+	</select>
+	<delete id="deleteUser_Auths" parameterType="java.lang.Integer">
+
+		delete from
+		user_auths where id=#{id}
+	</delete>
+
+
+	<insert id="insertUser_Auths" parameterType="User_Auths">
+		insert into
+		user_auths(user_id,identity_type,identifier,credential,phonenum)
+		values(#{user_id},#{identity_type},#{identifier},#{credential},#{phonenum})
+	</insert>
+	<!-- parameterType建议传入包装对象 resultType建议用扩展对象 -->
+
+	<select id="findUser_AuthsList" parameterType="com.femtoapp.pojo.User_AuthsQueryVo"
+		resultType="com.femtoapp.pojo.User_AuthsCustom">
+		select user_auths.*,user.*	     from user INNER JOIN user_auths  on `user`.uid=user_auths.user_id   
+		
+		
+		<include refid="query_where"></include>
+		order by  user.regist_time desc
+	</select>
+	
+	
+	
+	
+	<sql id="query_where">
+
+		<if test="user_AuthsCustom!=null">
+			<if test="user_AuthsCustom.nickname!=null and user_AuthsCustom.nickname!=''">
+			
+		   and	user.nickname like '%${user_AuthsCustom.nickname}%'
+			</if>
+			<if test="user_AuthsCustom.uid!=null and user_AuthsCustom.uid!=''">
+			
+		   and	user.uid like '%${user_AuthsCustom.uid}%'
+			</if>
+			<if test="user_AuthsCustom.identifier!=null and user_AuthsCustom.identifier!=''">
+			
+		   and	user_auths.identifier like '%${user_AuthsCustom.identifier}%'
+			</if>
+			<if test="user_AuthsCustom.phonenum!=null and user_AuthsCustom.phonenum!=''">
+			
+		   and	user_auths.phonenum like '%${user_AuthsCustom.phonenum}%'
+			</if>
+			
+			<if test="user_AuthsCustom.birthday!=null and user_AuthsCustom.birthday!=''">
+			
+		   and	user.birthday like '%${user_AuthsCustom.birthday}%'
+			</if>
+		</if>
+		
+	</sql>
+	
+	
+	
+	<update id="updateUser_Auths" parameterType="User_Auths">
+		update user_auths
+		set
+		user_id=#{user_id},identity_type=#{identity_type},identifier=#{identifier},credential=#{credential},phonenum=#{phonenum}
+		where id=#{id}
+
+	</update>
+
+
+
+	<resultMap type="com.femtoapp.pojo.User_Auths" id="User_AuthsUserLazyLoadingResultMap">
+
+		<id column="id" property="id" />
+		<result column="user_id" property="user_id" />
+		<result column="identity_type" property="identity_type" />
+		<result column="identifier" property="identifier" />
+		<result column="credential" property="credential" />
+		<association property="user" javaType="com.femtoapp.pojo.User"
+			select="com.femtoapp.mapper.UserMapper.findUserByid" column="user_id">
+
+		</association>
+
+
+	</resultMap>
+
+
+	<select id="findUser_AuthsUserLazyLoading" resultMap="User_AuthsUserLazyLoadingResultMap"
+		parameterType="java.lang.Integer">
+		select * from user_auths where id=#{id}
+	</select>
+	
+	
+	
+</mapper>

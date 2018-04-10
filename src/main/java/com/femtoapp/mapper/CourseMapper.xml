@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.CourseMapper">
+	<select id="findCourseByid" parameterType="java.lang.Integer"
+		resultType="Course">
+
+		Select * from course where id=#{id}
+	</select>
+
+
+	<delete id="deleteCourse" parameterType="java.lang.Integer">
+
+		delete from course where id=#{id}
+	</delete>
+
+
+	<insert id="insertCourse" parameterType="Course">
+		insert into
+		course(user_id,level,heat,begin_time,end_time,step_count,mileage,create_time,title)
+		values(#{user_id},#{level},#{heat},#{begin_time},#{end_time},#{step_count},#{mileage},#{create_time},#{title})
+	</insert>
+	<!-- parameterType建议传入包装对象 resultType建议用扩展对象 -->
+	<select id="findCourseList" parameterType="com.femtoapp.pojo.CourseQueryVo"
+		resultType="com.femtoapp.pojo.CourseCustom">
+		select course.* from course 
+		
+		<where>
+			<include refid="query_course_where"></include>
+
+		</where>
+		 order by create_time desc
+
+	</select>
+	<update id="updateCourse" parameterType="Course">
+		update course set
+		user_id=#{user_id},level=#{level},heat=#{heat},step_count=#{step_count},mileage=#{mileage},
+		create_time=#{create_time},title=#{title},
+		begin_time=#{begin_time},end_time=#{end_time}
+		where
+		id=#{id}
+
+	</update>
+
+	<sql id="query_course_where">
+		<if test="courseCustom!=null">
+			<if test="courseCustom.user_id!=null and courseCustom.user_id!=''">
+				and course.user_id like '%${courseCustom.user_id}%'
+			</if>
+
+			<if test="courseCustom.title!=null and courseCustom.title!=''">
+			and	course.title like '%${courseCustom.title}%'
+			</if>
+			<if test="courseCustom.level!=null and courseCustom.level!=''">
+			and	course.level like '%${courseCustom.level}%'
+			</if>
+			<if test="courseCustom.mileage!=null and courseCustom.mileage!=''">
+			and	course.mileage like '%${courseCustom.mileage}%'
+			</if>
+			
+		</if>
+	</sql>
+</mapper>

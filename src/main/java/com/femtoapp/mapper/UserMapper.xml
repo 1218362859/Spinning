@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.UserMapper">
+	<select id="findUserByid" parameterType="String" resultType="User">
+
+		Select * from user where uid=#{uid}
+	</select>
+	
+	
+	<delete id="deleteUser" parameterType="String">
+	
+		delete from user where uid=#{uid}
+	</delete>
+
+
+	<insert id="insertUser" parameterType="User">
+		insert into
+		user(uid,nickname,photourl,sex,weight,level,regist_time,purview,height,birthday)
+		values(#{uid},#{nickname},#{photourl},#{sex},#{weight},#{level},#{regist_time},#{purview},#{height},#{birthday})
+	</insert>
+	<!-- parameterType建议传入包装对象 resultType建议用扩展对象 -->
+	<select id="findUserList" parameterType="com.femtoapp.pojo.UserQueryVo"
+		resultType="com.femtoapp.pojo.UserCustom">
+		select user.* from user
+
+	</select>
+	<update id="updateUser" parameterType="User">
+		update user set
+		nickname=#{nickname},photourl=#{photourl},sex=#{sex},weight=#{weight},level=#{level},regist_time=#{regist_time},purview=#{purview},height=#{height},birthday=#{birthday}
+		where uid=#{uid}
+
+	</update>
+
+	
+</mapper>

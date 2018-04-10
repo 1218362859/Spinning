@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.femtoapp.mapper.CommentsMapper">
+	<select id="findCommentsByid" parameterType="java.lang.Integer"
+		resultType="Comments">
+
+		Select * from comments where id=#{id}
+	</select>
+
+
+	<delete id="deleteComments" parameterType="java.lang.Integer">
+
+		delete from comments where id=#{id}
+	</delete>
+
+
+	<insert id="insertComments" parameterType="Comments">
+		insert into
+		comments(aid,to_user,from_user,msg,time)
+		values(#{aid},#{to_user},#{from_user},#{msg},#{time})
+	</insert>
+	<!-- parameterType建议传入包装对象 resultType建议用扩展对象 -->
+	
+	<select id="findCommentsList" parameterType="com.femtoapp.pojo.CommentsQueryVo"
+		resultType="com.femtoapp.pojo.CommentsCustom">
+		select comments.*  from comments
+		<where>
+			<include refid="query_where"></include>
+
+		</where>
+		 order by time desc
+	
+	</select>
+	<update id="updateComments" parameterType="Comments">
+		update comments set
+		aid=#{aid},to_user=#{to_user},from_user=#{from_user},msg=#{msg},time=#{time}
+		where id=#{id}
+
+	</update>
+	<sql id="query_where">
+		<if test="commentsCustom!=null">
+			<if test="commentsCustom.aid!=null and commentsCustom.aid!=''">
+				and comments.aid like '%${commentsCustom.aid}%'
+			</if>
+
+			<if test="commentsCustom.to_user!=null and commentsCustom.to_user!=''">
+			and	comments.to_user like '%${commentsCustom.to_user}%'
+			</if>
+			<if test="commentsCustom.from_user!=null and commentsCustom.from_user!=''">
+			and	comments.from_user like '%${commentsCustom.from_user}%'
+			</if>
+			<if test="commentsCustom.time!=null and commentsCustom.time!=''">
+			and	comments.time like '%${commentsCustom.time}%'
+			</if>
+			
+		</if>
+	</sql>
+
+</mapper>
